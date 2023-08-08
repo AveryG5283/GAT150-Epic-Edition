@@ -1,10 +1,14 @@
 #include "Player.h"
 #include "Weapon.h"
 #include "Framework/Scene.h"
+#include "Framework/SpriteComponent.h"
+#include "Framework/ResourceManager.h"
+#include "Framework/PhysicsComponent.h"
 #include "Input/InputSystem.h"
 #include "Renderer/Renderer.h"
 #include "Audio/AudioSystem.h"
 #include "Framework/Emitter.h"
+#include "Renderer/Texture.h"
 
 #include "Game/SpaceBlast3000.h"
 
@@ -22,7 +26,10 @@ void Player::Update(float dt)
 	if (minimum::g_inputSystem.GetKeyDown(SDL_SCANCODE_W)) thrust = 1;
 
 	minimum::vec2 forward = minimum::vec2(0, -1).Rotate(m_transform.rotation);
-	AddForce(forward * m_speed * thrust); //moves player
+
+	auto physicsComponent = GetComponent<minimum::PhysicsComponent>();
+	physicsComponent->ApplyForce(forward * m_speed * thrust);
+
 
 	m_transform.position.x = minimum::Wrap(m_transform.position.x, (float)minimum::g_renderer.GetWidth());
 	m_transform.position.y = minimum::Wrap(m_transform.position.y, (float)minimum::g_renderer.GetHeight());

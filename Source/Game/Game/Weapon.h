@@ -5,8 +5,8 @@ class Weapon : public minimum::Actor
 {
 public:
 
-	Weapon(float speed, const minimum::Transform& transform, std::shared_ptr<minimum::Model> model) :
-		Actor{ transform, model },
+	Weapon(float speed, const minimum::Transform& transform) :
+		Actor{ transform },
 		m_speed{ speed }
 	{
 		m_lifespan = 2.0f;

@@ -2,7 +2,11 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Enemy2.h"
+
 #include "Framework/Scene.h"
+#include "Framework/ResourceManager.h"
+#include "Framework/SpriteComponent.h"
+#include "Framework/EnginePhysicsComponent.h"
 
 #include "Audio/AudioSystem.h"
 #include "Input/InputSystem.h"
@@ -14,7 +18,7 @@
 bool SpaceBlast3000::Initialize()
 {
 	//create font / text objects
-	m_font = std::make_shared<minimum::Font>("QuirkyRobot.ttf", 24);
+	m_font = minimum::g_resources.Get<minimum::Font>("QuirkyRobot.ttf", 24);
 	m_scoreText = std::make_unique<minimum::Text>(m_font);
 	m_scoreText->Create(minimum::g_renderer, "Score: nothing yet, dumby", minimum::Color{ 1, 1, 1, 1 });
 
@@ -60,18 +64,33 @@ void SpaceBlast3000::Update(float dt)
 	case SpaceBlast3000::eState::StartLevel:
 		m_scene->RemoveAll();
 	{
-		std::unique_ptr<Player> player = std::make_unique<Player>(20.0f, minimum::Pi, minimum::Transform{ { 400, 300}, 0, 4.5f }, minimum::g_manager.Get("ship.txt"));
+		//create player
+		std::unique_ptr<Player> player = std::make_unique<Player>(20.0f, minimum::Pi, minimum::Transform{ { 400, 300}, 0, 4.5f });
 		player->m_tag = "Player";
 		player->m_game = this;
-		player->SetDamping(0.9f);
+
+		//create components
+		std::unique_ptr<minimum::SpriteComponent> component = std::make_unique<minimum::SpriteComponent>();
+		component->m_texture = minimum::g_resources.Get<minimum::Texture>("cat2.jpg", minimum::g_renderer);
+		player->AddComponent(std::move(component));
+
+		auto physicsComponent = std::make_unique<minimum::EnginePhysicsComponent>();
+		physicsComponent->m_damping = 0.9f;
+		player->AddComponent(std::move(physicsComponent));
+
 		m_scene->Add(std::move(player));
 
-		std::unique_ptr<Enemy2> enemy2 = std::make_unique<Enemy2>(100.0f, minimum::Pi, minimum::Transform{ { 100, 100 }, 0, 5.5f }, minimum::g_manager.Get("enemy2.txt"));
+		std::unique_ptr<Enemy2> enemy2 = std::make_unique<Enemy2>(100.0f, minimum::Pi, minimum::Transform{ { 100, 100 }, 0, 5.5f });
 		enemy2->m_tag = "Enemy2";
 		enemy2->m_game = this;
 		m_scene->Add(std::move(enemy2));
 
-		std::unique_ptr<Enemy2> enemy22 = std::make_unique<Enemy2>(170.0f, minimum::Pi, minimum::Transform{ { 650, 600 }, 0, 5.5f }, minimum::g_manager.Get("enemy2.txt"));
+		//create components
+		std::unique_ptr<minimum::SpriteComponent> component2 = std::make_unique<minimum::SpriteComponent>();
+		component2->m_texture = minimum::g_resources.Get<minimum::Texture>("cat2.jpg", minimum::g_renderer);
+		enemy2->AddComponent(std::move(component));
+
+		std::unique_ptr<Enemy2> enemy22 = std::make_unique<Enemy2>(170.0f, minimum::Pi, minimum::Transform{ { 650, 600 }, 0, 5.5f });
 		enemy22->m_tag = "Enemy2";
 		enemy22->m_game = this;
 		m_scene->Add(std::move(enemy22));
@@ -86,14 +105,14 @@ void SpaceBlast3000::Update(float dt)
 		if (m_spawnTimer >= m_spawnTime)
 		{
 			m_spawnTimer = 0;
-			std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(minimum::randomf(20.0f, 200.0f), minimum::Pi, minimum::Transform{ { minimum::random(800), minimum::random(600)}, minimum::randomf(minimum::twoPi), 3 }, minimum::g_manager.Get("enemy1.txt"));
+			std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(minimum::randomf(20.0f, 200.0f), minimum::Pi, minimum::Transform{ { minimum::random(800), minimum::random(600)}, minimum::randomf(minimum::twoPi), 3 });
 			enemy->m_tag = "Enemy";
 			enemy->m_game = this;
 			m_scene->Add(std::move(enemy));
 
 			if (!enemy3Summoned && m_score >= 1000)
 			{
-				std::unique_ptr<Enemy2> enemy23 = std::make_unique<Enemy2>(225.0f, minimum::Pi, minimum::Transform{ { 50, 50 }, 0, 7.5f }, minimum::g_manager.Get("enemy2.txt"));
+				std::unique_ptr<Enemy2> enemy23 = std::make_unique<Enemy2>(225.0f, minimum::Pi, minimum::Transform{ { 50, 50 }, 0, 7.5f });
 				enemy23->m_tag = "Enemy2";
 				enemy23->m_game = this;
 				m_scene->Add(std::move(enemy23));

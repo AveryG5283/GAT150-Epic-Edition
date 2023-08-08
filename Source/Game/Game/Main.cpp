@@ -9,13 +9,17 @@
 #include "Audio/AudioSystem.h"
 #include "Renderer/Font.h"
 #include "Renderer/Text.h"
+#include "Framework/ResourceManager.h"
 #include "Renderer/ParticleSystem.h"
+#include "Renderer/Texture.h"
 
 #include "SpaceBlast3000.h"
 
 #include <thread>
 #include <iostream> //searches the system instead
 #include <vector>
+#include <array>
+#include <map>
 
 using namespace std;
 
@@ -42,9 +46,24 @@ public:
 	minimum::vec2 m_vel;
 };
 
+void print_arg(int count, ...)
+{
+	va_list args;
+
+	va_start(args, count);
+	for (int i = 0; i < count; ++i)
+	{
+		std::cout << va_arg(args, const char*) << std::endl;
+	}
+	va_end(args);
+}
 
 int main(int argc, char* argv[])
-{
+{	
+	print_arg(3, "hello", "world", "goodbye");
+
+	INFO_LOG("Oh hellooo");
+
 	minimum::MemoryTracker::Initialize();
 
 	minimum::seedRandom((unsigned int)time(nullptr));
@@ -64,9 +83,13 @@ int main(int argc, char* argv[])
 	vector<Star> stars;
 
 	bool quit = false;
+
+	// create texture
+
 	// da game loop
 	while (!quit)
 	{
+
 		//update engine
 		minimum::g_time.Tick();
 		minimum::g_inputSystem.Update();
@@ -99,6 +122,8 @@ int main(int argc, char* argv[])
 		}
 
 		game->Draw(minimum::g_renderer);
+
+		//minimum::g_renderer.DrawTexture(texture.get(), 200.0f, 200.0f, 0.0f);
 
 		minimum::g_renderer.EndFrame();
 	}

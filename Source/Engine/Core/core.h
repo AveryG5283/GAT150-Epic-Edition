@@ -4,6 +4,7 @@
 #include "FileIO.h"
 #include "Memory.h"
 #include "Time.h"
+#include "Logger.h"
 
 // math stuff
 #include "Vector2.h"

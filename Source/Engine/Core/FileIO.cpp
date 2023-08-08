@@ -1,4 +1,7 @@
 #include "FileIO.h"
+#include "Logger.h"
+
+#include <iostream>
 #include <fstream>
 
 namespace minimum
@@ -16,6 +19,12 @@ namespace minimum
 		return ec.value() == 0;
 	}
 
+	std::string getFileName(const std::filesystem::path& path)
+	{
+		return path.filename().string();
+	}
+
+
 	bool fileExists(const std::filesystem::path& path)
 	{
 		return std::filesystem::exists(path);
@@ -31,6 +40,7 @@ namespace minimum
 	bool readFile(const std::filesystem::path& path, std::string& buffer)
 	{
 		if (!fileExists(path)) {
+			WARNING_LOG("file not loaded: " << path.string());
 			return false;
 		}
 
