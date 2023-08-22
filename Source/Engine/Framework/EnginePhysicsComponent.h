@@ -6,9 +6,8 @@ namespace minimum
 
 	class EnginePhysicsComponent : public PhysicsComponent
 	{
-
-
-
+	public:
+		CLASS_DECLARATION(EnginePhysicsComponent)
 
 		// Inherited via PhysicsComponent
 		virtual void Update(float dt) override;

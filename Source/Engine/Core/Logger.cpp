@@ -4,38 +4,30 @@
 
 namespace minimum
 {
-	Logger g_logger(LogLevel::Info, &std::cout, "log.txt");
-
-
 	bool Logger::Log(LogLevel logLevel, const std::string& filename, int line)
 	{
 		if (logLevel < m_logLevel) return false;
 
 		switch (logLevel)
 		{
-		case minimum::LogLevel::Info:
-			*this << "Here's some facts! ";
-
+		case LogLevel::Info:
+			*this << "INFO: ";
 			break;
-		case minimum::LogLevel::Warning:
-			*this << "Something's not quite right, let me warn ya! ";
-
+		case LogLevel::Warning:
+			*this << "WARNING: ";
 			break;
-		case minimum::LogLevel::Error:
-			*this << "DAMN! Something broke. Must be an error: ";
-
+		case LogLevel::Error:
+			*this << "ERROR: ";
 			break;
-		case minimum::LogLevel::Assert:
+		case LogLevel::Assert:
 			*this << "ASSERT: ";
-
 			break;
 		default:
 			break;
 		}
 
-		*this << getFileName(filename) << "(" << line << ") ";
+		*m_ostream << getFileName(filename) << "(" << line << ")\n";
 
 		return true;
 	}
-
 }

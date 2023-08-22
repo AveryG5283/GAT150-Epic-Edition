@@ -1,6 +1,5 @@
 #pragma once
 #include "Core/Core.h"
-#include "Renderer.h"
 #include "Core/Vector2.h"
 
 namespace minimum

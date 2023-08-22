@@ -3,6 +3,7 @@
 #include "Framework/Resource.h"
 
 struct SDL_Texture;
+
 namespace minimum
 {
 	class Texture : public Resource

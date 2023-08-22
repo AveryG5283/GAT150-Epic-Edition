@@ -1,4 +1,5 @@
 #include "Weapon.h"
+#include "Renderer/Renderer.h"
 
 void Weapon::Update(float dt)
 {
@@ -13,8 +14,8 @@ void Weapon::Update(float dt)
 
 void Weapon::OnCollision(Actor* other)
 {
-    if (other->m_tag != m_tag)
+    if (other->tag != tag)
     {
-        m_destroyed = true;
+        destroyed = true;
     }
 }

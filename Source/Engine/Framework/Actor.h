@@ -6,53 +6,63 @@
 
 namespace minimum
 {
-	class Actor
+	class Actor : public Object
 	{
 	public:
+		CLASS_DECLARATION(Actor)
+
 		Actor() = default;
-		Actor(const Transform transform) :
-			m_transform{ transform }
-		{};
+		Actor(const Transform& transform) : transform{ transform } {}
+
+		Actor(const Actor& other);
+
+		virtual bool Initialize();
+		virtual void OnDestroy();
 
 		virtual void Update(float dt); //dt = delta time
 		virtual void Draw(Renderer& renderer);
 
 		void AddComponent(std::unique_ptr<Component> component);
-
 		template<typename T>
 		T* GetComponent();
-
 
 		float GetRadius() { return 30.0f; }
 		virtual void OnCollision(Actor* other) {};
 
-		float GetLifespan() { return m_lifespan; };
-		float SetLifespan(float lifespan) { return m_lifespan = lifespan; };
+		float GetLifespan() { return lifespan; };
+		float SetLifespan(float lifespan) { return lifespan = lifespan; };
+
+		bool GetDestroyed() { return destroyed; };
+		bool SetDestroyed(bool destroyed) { return destroyed = destroyed; };
 
 		class Scene* m_scene = nullptr; //inline forward declaration
 		friend class Scene;
 
 		class Game* m_game = nullptr;
 
-		Transform m_transform;
-		std::string m_tag;
-		float m_lifespan = 1.0f;
+	public:
+		Transform transform;
+		std::string tag;
+
+		bool persistent = false;
+		bool prototype;
 
 	protected:
-		std::vector<std::unique_ptr<Component>> m_components;
+		std::vector<std::unique_ptr<Component>> components;
 
-		bool m_destroyed = false; //a flag
+		bool destroyed = false; //a flag
+		float lifespan = -1.0f;
 	};
-
 
 	template<typename T>
 	inline T* Actor::GetComponent()
 	{
-		for (auto& component : m_components)
+		for (auto& component : components)
 		{
 			T* result = dynamic_cast<T*>(component.get());
 			if (result) return result;
 		}
+
 		return nullptr;
 	}
 }

@@ -1,13 +1,17 @@
 #pragma once
-#include "Renderer.h"
 #include "Font.h"
 #include "Core/Color.h"
 
 #include <string>
 #include <memory>
 
+struct SDL_Texture;
+
 namespace minimum
 {
+
+	class Renderer;
+
 	class Text
 	{
 	public:

@@ -1,25 +1,28 @@
 #pragma once
+#include "Framework/Singleton.h"
+
 #include <string>
 #include <cassert>
 #include <fstream>
-
+#include <iostream>
 
 #ifdef _DEBUG
-#define INFO_LOG(message)     { if (minimum::g_logger.Log(minimum::LogLevel::Info, __FILE__, __LINE__))     { minimum::g_logger << message << "\n"; } }
-#define WARNING_LOG(message)  { if (minimum::g_logger.Log(minimum::LogLevel::Warning, __FILE__, __LINE__))  { minimum::g_logger << message << "\n"; } }
-#define ERROR_LOG(message)    { if (minimum::g_logger.Log(minimum::LogLevel::Error, __FILE__, __LINE__))    { minimum::g_logger << message << "\n"; } }
-#define ASSERT_LOG(condition, message)   { if (!condition && minimum::g_logger.Log(minimum::LogLevel::Assert, __FILE__, __LINE__))   { minimum::g_logger << message << "\n"; } assert(condition); }
-#else
-#define INFO_LOG(message)     {}  
-#define WARNING_LOG(message)  {}
-#define ERROR_LOG(message)    {}
-#define ASSERT_LOG(condition, message)   {}
+
+#define INFO_LOG(message) { if (minimum::Logger::Instance().Log(minimum::LogLevel::Info, __FILE__, __LINE__)) {minimum::Logger::Instance() << message << "\n";} }
+#define WARNING_LOG(message) { if (minimum::Logger::Instance().Log(minimum::LogLevel::Warning, __FILE__, __LINE__)) {minimum::Logger::Instance() << message << "\n";} }
+#define ERROR_LOG(message) { if (minimum::Logger::Instance().Log(minimum::LogLevel::Error, __FILE__, __LINE__)) {minimum::Logger::Instance() << message << "\n";} }
+#define ASSERT_LOG(condition, message) { if (!condition && minimum::Logger::Instance().Log(minimum::LogLevel::Assert, __FILE__, __LINE__)) {minimum::Logger::Instance() << message << "\n";} assert(condition); }
+#else 
+#define INFO_LOG(message) {}
+#define WARNING_LOG(message) {}
+#define ERROR_LOG(message) {}
+#define ASSERT_LOG(condition, message) {}
+
 #endif // _DEBUG
 
 namespace minimum
 {
-
-	enum class LogLevel
+	enum class LogLevel //put it into its own scope
 	{
 		Info,
 		Warning,
@@ -27,21 +30,21 @@ namespace minimum
 		Assert
 	};
 
-	class Logger
+	class Logger : public Singleton<Logger>
 	{
 	public:
-		Logger(LogLevel logLevel, std::ostream* ostream, const std::string& filename = "") :
+		// setting all of these to have default so we can use THIS \/ as the default constructor
+		Logger(LogLevel logLevel = LogLevel::Info, std::ostream* ostream = &std::cout, const std::string& filename = "log.txt") :
 			m_logLevel{ logLevel },
-			m_ostream{ ostream } 
+			m_ostream{ ostream }
 		{
-			if(!filename.empty()) m_fstream.open(filename);
-		}
+			if (!filename.empty()) m_fstream.open(filename);
+		};
 
 		bool Log(LogLevel logLevel, const std::string& filename, int line);
 
 		template<typename T>
 		Logger& operator << (T value);
-
 
 	private:
 		LogLevel m_logLevel;
@@ -49,13 +52,10 @@ namespace minimum
 		std::ofstream m_fstream;
 	};
 
-	extern Logger g_logger;
-
 	template<typename T>
 	inline Logger& Logger::operator<<(T value)
 	{
 		if (m_ostream != nullptr) *m_ostream << value;
-
 		if (m_fstream.is_open())
 		{
 			m_fstream << value;
@@ -64,5 +64,4 @@ namespace minimum
 
 		return *this;
 	}
-
 }

@@ -1,15 +1,16 @@
 #pragma once
+#include "Object.h"
 
 namespace minimum
 {
-	class Component
+	class Component : public Object
 	{
 	public:
 		virtual void Update(float dt) = 0;
 		
 		friend class Actor;
 
-	protected:
+	public:
 		class Actor* m_owner = nullptr;
 
 	};

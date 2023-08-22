@@ -1,7 +1,9 @@
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Actor.cpp
+C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\CircleCollisionComponent.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Emitter.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\EnginePhysicsComponent.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\ModelRenderComponent.cpp
+C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Object.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\ResourceManager.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Scene.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\SpriteComponent.cpp

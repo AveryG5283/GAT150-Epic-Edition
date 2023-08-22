@@ -1,1 +1,6 @@
-Here's some facts! Main.cpp(65) Oh hellooo
+INFO: Class Registered: SpriteComponent
+INFO: Class Registered: ModelRenderComponent
+INFO: Class Registered: EnginePhysicsComponent
+INFO: Class Registered: CircleCollisionComponent
+INFO: Class Registered: Actor
+INFO: Initialize Engine...

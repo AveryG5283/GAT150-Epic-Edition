@@ -1,38 +1,42 @@
 #pragma once
 #include "Resource.h"
+#include "Singleton.h"
+
 #include <map>
 #include <memory>
 #include <string>
 
+//macro // type = resource type we're getting // filename = name of file // ... = any other thing we need
+#define GET_RESOURCE(type, filename, ...) minimum::ResourceManager::Instance().Get<type>(filename, __VA_ARGS__)
+
 namespace minimum
 {
-	class ResourceManager
-	{
-	public:
-		template<typename T, typename ... TArgs>
-		res_t<T> Get(const std::string& filename, TArgs ... args);
+    class ResourceManager : public Singleton<ResourceManager>
+    {
+    public:
+        template<typename T, typename ... TArgs>
+        res_t<T> Get(const std::string& filename, TArgs ... args);
 
-	private:
-		std::map<std::string, res_t<Resource>> m_resources;
+    private:
+        std::map<std::string, res_t<Resource>> m_resources;
+    };
 
-	};
+    template<typename T, typename ...TArgs>
+    inline res_t<T> ResourceManager::Get(const std::string& filename, TArgs ...args)
+    {
+        if (m_resources.find(filename) != m_resources.end())
+        {
+            return std::dynamic_pointer_cast<T>(m_resources[filename]);
+        }
 
-	template<typename T, typename ...TArgs>
-	inline res_t<T> ResourceManager::Get(const std::string& filename, TArgs ...args)
-	{
-		if (m_resources.find(filename) != m_resources.end())
-		{
-			return std::dynamic_pointer_cast<T>(m_resources[filename]);
-		}
-		
-		res_t<T> resource = std::make_shared<T>();
-		resource->Create(filename, args...);
+        res_t<T> resource = std::make_shared<T>();
 
-		//m_resources[filename] = resource;
+        resource = std::make_shared<T>();
 
-		return resource;
-	}
+        resource->Create(filename, args...);
 
-	extern ResourceManager g_resources;
+        m_resources[filename] = resource;
 
-}
+        return resource;
+    }
+};

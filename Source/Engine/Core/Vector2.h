@@ -15,6 +15,11 @@ namespace minimum
 		Vector2(float x, float y) : x{ x }, y{ y } {} //points to THIS class's x and y's || this->x = x; this->y = y;
 		Vector2(int x, int y) : x{ (float)x }, y{ (float)y } {}
 
+		float operator [] (size_t index) const { return (&x)[index];}
+		float& operator [] (size_t index) { return (&x)[index]; }
+
+		Vector2 operator - () const { return Vector2(-x, -y); }
+
 		//Vector2 Add(Vector2& const v) const { return Vector2(x + v.x, y + v.y); } //we're making a copy of a vector, v doesnt change
 		Vector2 operator + (const Vector2& v) const { return Vector2(x + v.x, y + v.y); };
 		Vector2 operator - (const Vector2& v) const { return Vector2(x - v.x, y - v.y); }; //what i did worked and this is what came from it >;3

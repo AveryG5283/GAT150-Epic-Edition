@@ -1,17 +1,12 @@
 #include "Core/Core.h" //linked to a bunch of directories
 #include "Renderer/Renderer.h"
-#include "Renderer/ModelManager.h"
 #include "Input/InputSystem.h"
-#include "Framework/Scene.h"
-#include "Framework/Emitter.h"
+#include "Framework/Framework.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Audio/AudioSystem.h"
-#include "Renderer/Font.h"
-#include "Renderer/Text.h"
-#include "Framework/ResourceManager.h"
-#include "Renderer/ParticleSystem.h"
-#include "Renderer/Texture.h"
+
+#include "Physics/PhysicsSystem.h"
 
 #include "SpaceBlast3000.h"
 
@@ -58,11 +53,13 @@ void print_arg(int count, ...)
 	va_end(args);
 }
 
+
 int main(int argc, char* argv[])
 {	
-	print_arg(3, "hello", "world", "goodbye");
 
-	INFO_LOG("Oh hellooo");
+
+
+	INFO_LOG("Initialize Engine...");
 
 	minimum::MemoryTracker::Initialize();
 
@@ -75,6 +72,7 @@ int main(int argc, char* argv[])
 
 	minimum::g_inputSystem.Initialize();
 	minimum::g_audioSystem.Initialize();
+	minimum::PhysicsSystem::Instance().Initialize();
 	
 
 	unique_ptr<SpaceBlast3000> game = make_unique<SpaceBlast3000>();
