@@ -30,18 +30,15 @@ namespace minimum
 				CollisionComponent* collision1 = (*iter1)->GetComponent<CollisionComponent>();
 				CollisionComponent* collision2 = (*iter2)->GetComponent<CollisionComponent>();
 
-
-
 				float distance = (*iter1)->transform.position.Distance((*iter2)->transform.position);
-				float radius = (*iter1)->GetRadius() + (*iter2)->GetRadius();
 
 				if (collision1 == nullptr || collision2 == nullptr) continue;
 
 				if (collision1->CheckCollision(collision2))
 				{
 					//boom
-					(*iter1)->OnCollision(iter2->get()); //gets the raw pointer from iter 2 or i guess the object?
-					(*iter2)->OnCollision(iter1->get());
+					(*iter1)->OnCollisionEnter(iter2->get()); //gets the raw pointer from iter 2 or i guess the object?
+					(*iter2)->OnCollisionEnter(iter1->get());
 				}
 			}
 		}
@@ -80,22 +77,21 @@ namespace minimum
 			return false;
 		}
 
-		Read(document);
+		Read(document); // breaks inside of here
 
 		return true;
 	}
 
 	void Scene::Read(const json_t& value)
 	{
-		if (HAS_DATA(value, m_actors) && GET_DATA(value, m_actors).IsArray())
+		if (HAS_DATA(value, actors) && GET_DATA(value, actors).IsArray())
 		{
-			for (auto& actorValue : GET_DATA(value, m_actors).GetArray())
+			for (auto& actorValue : GET_DATA(value, actors).GetArray())
 			{
 				std::string type;
 				READ_DATA(actorValue, type);
-
 				auto actor = CREATE_CLASSBASE(Actor, type);
-				actor->Read(actorValue);
+				actor->Read(actorValue); // breaks inside of here on second loop through, not first
 
 				if (actor->prototype)
 				{
@@ -104,7 +100,7 @@ namespace minimum
 				}
 				else
 				{
-				Add(std::move(actor));
+					Add(std::move(actor));
 				}
 
 			}

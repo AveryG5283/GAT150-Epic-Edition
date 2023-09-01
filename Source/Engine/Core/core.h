@@ -15,3 +15,4 @@
 #include "Transform.h"
 #include "MathUtils.h"
 #include "Color.h"
+#include "Rect.h"

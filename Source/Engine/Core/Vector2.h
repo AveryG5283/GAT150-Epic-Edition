@@ -15,7 +15,7 @@ namespace minimum
 		Vector2(float x, float y) : x{ x }, y{ y } {} //points to THIS class's x and y's || this->x = x; this->y = y;
 		Vector2(int x, int y) : x{ (float)x }, y{ (float)y } {}
 
-		float operator [] (size_t index) const { return (&x)[index];}
+		float  operator [] (size_t index) const { return (&x)[index];}
 		float& operator [] (size_t index) { return (&x)[index]; }
 
 		Vector2 operator - () const { return Vector2(-x, -y); }

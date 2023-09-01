@@ -15,6 +15,9 @@ namespace minimum
 		Actor(const Transform& transform) : transform{ transform } {}
 
 		Actor(const Actor& other);
+		virtual ~Actor() {
+			OnDestroy();
+		}
 
 		virtual bool Initialize();
 		virtual void OnDestroy();
@@ -26,8 +29,8 @@ namespace minimum
 		template<typename T>
 		T* GetComponent();
 
-		float GetRadius() { return 30.0f; }
-		virtual void OnCollision(Actor* other) {};
+		virtual void OnCollisionEnter(Actor* other) {};
+		virtual void OnCollisionExit(Actor* other) {};
 
 		float GetLifespan() { return lifespan; };
 		float SetLifespan(float lifespan) { return lifespan = lifespan; };
@@ -62,7 +65,6 @@ namespace minimum
 			T* result = dynamic_cast<T*>(component.get());
 			if (result) return result;
 		}
-
 		return nullptr;
 	}
 }

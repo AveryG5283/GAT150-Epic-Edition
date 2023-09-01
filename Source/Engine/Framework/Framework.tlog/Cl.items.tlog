@@ -1,9 +1,15 @@
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Actor.cpp
+C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Box2DPhysicsCollisionComponent.cpp
+C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Box2DPhysicsComponent.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\CircleCollisionComponent.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Emitter.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\EnginePhysicsComponent.cpp
+C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\EventManager.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\ModelRenderComponent.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Object.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\ResourceManager.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\Scene.cpp
+C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\SpriteAnimRenderComponent.cpp
 C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\SpriteComponent.cpp
+C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\TextRenderComponent.cpp
+C:\Users\Avery\Desktop\GAT150\Source\Engine\Framework\TilemapComponent.cpp

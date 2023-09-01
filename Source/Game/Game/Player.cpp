@@ -1,10 +1,6 @@
 #include "Player.h"
 #include "Weapon.h"
-#include "Framework/Scene.h"
-#include "Framework/SpriteComponent.h"
-#include "Framework/ResourceManager.h"
-#include "Framework/PhysicsComponent.h"
-#include "Framework/CollisionComponent.h"
+#include "Framework/Framework.h"
 #include "Input/InputSystem.h"
 #include "Renderer/Renderer.h"
 #include "Audio/AudioSystem.h"
@@ -13,6 +9,7 @@
 
 #include "Game/SpaceBlast3000.h"
 namespace minimum {
+	CLASS_DEFINITION(Player)
 
 	bool Player::Initialize()
 	{
@@ -41,14 +38,15 @@ namespace minimum {
 		float rotate = 0;
 		if (minimum::g_inputSystem.GetKeyDown(SDL_SCANCODE_A)) rotate = -1;
 		if (minimum::g_inputSystem.GetKeyDown(SDL_SCANCODE_D)) rotate = 1;
-		transform.rotation += rotate * m_turnRate * minimum::g_time.GetDeltaTime();
+		//transform.rotation += rotate * m_turnRate * minimum::g_time.GetDeltaTime();
+		m_physicsComponent->ApplyTorque(rotate * turnRate);
 
 		float thrust = 0;
 		if (minimum::g_inputSystem.GetKeyDown(SDL_SCANCODE_W)) thrust = 1;
 
 		minimum::vec2 forward = minimum::vec2(0, -1).Rotate(transform.rotation);
 
-		m_physicsComponent->ApplyForce(forward * m_speed * thrust);
+		m_physicsComponent->ApplyForce(forward * speed * thrust);
 
 
 		transform.position.x = minimum::Wrap(transform.position.x, (float)minimum::g_renderer.GetWidth());
@@ -56,15 +54,18 @@ namespace minimum {
 
 	}
 
-	void Player::OnCollision(Actor* other)
+	void Player::OnCollisionEnter(Actor* other)
 	{
 		if (other->tag == "Enemy2")
 		{
-			dynamic_cast<SpaceBlast3000*>(m_game)->SetState(SpaceBlast3000::eState::GameOver);
+			minimum::EventManager::Instance().DispatchEvent("OnPlayerDead", 0);
 		}
 
 		if (other->tag == "Enemy1")
 		{
+
+			minimum::EventManager::Instance().DispatchEvent("AddPoints", 100);
+
 			minimum::EmitterData data;
 			data.burst = true;
 			data.burstCount = 100;
@@ -84,7 +85,13 @@ namespace minimum {
 			m_scene->Add(std::move(emitter));
 		}
 
+	}
 
+	void Player::Read(const json_t& value)
+	{
+		Actor::Read(value);
+		READ_DATA(value, speed);
+		READ_DATA(value, turnRate);
 	}
 
 }

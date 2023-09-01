@@ -1,0 +1,220 @@
+{
+  "actors": [
+    {
+      "type": "Actor",
+      "name": "Background",
+      "persistent": true,
+      "transform": {
+        "position": [
+          400,
+          300
+        ],
+        "scale": 2.5,
+        "rotation": 0
+      },
+      "components": [
+        {
+          "type": "SpriteComponent",
+          "textureName": "JumpDingus3/Textures/background.png"
+        }
+      ]
+    },
+    {
+      "type": "Actor",
+      "name": "Title",
+      "persistent": true,
+      "transform": {
+        "position": [ 400, 275 ],
+        "scale": 2,
+        "rotation": 0
+      },
+      "components": [
+        {
+          "type": "TextRenderComponent",
+          "fontName": "QuirkyRobot.ttf",
+          "fontSize": 40,
+          "text": "Jump Dingus 3",
+          "color": [ 1, 0, 0, 1 ]
+        }
+      ]
+    },
+    {
+      "type": "Actor",
+      "tag": "Trophy",
+      "name": "Trophy",
+      "persistent": true,
+      "transform": {
+        "position": [
+          700,
+          545
+        ],
+        "scale": 2,
+        "rotation": 0
+      },
+      "components": [
+        {
+          "type": "SpriteAnimRenderComponent",
+          "textureName": "JumpDingus3/Textures/shitty trophy.png",
+          "defaultSequenceName": "idle",
+          "sequences": [
+            {
+              "name": "idle",
+              "fps": 1,
+              "numColumns": 1,
+              "numRows": 1,
+              "startFrame": 1,
+              "endFrame": 1,
+              "textureName": "JumpDingus3/Textures/shitty trophy.png"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "type": "Enemy",
+      "name": "Enemy",
+      "tag": "Enemy",
+      "persistent": true,
+      "speed": 5,
+      "jump": 5,
+      "transform": {
+        "position": [
+          80,
+          40
+        ],
+        "scale": 2,
+        "rotation": 0
+      },
+      "components": [
+        {
+          "type": "SpriteAnimRenderComponent",
+          "textureName": "JumpDingus3/Textures/enemy-Sheet.png",
+          "defaultSequenceName": "idle",
+          "sequences": [
+            {
+              "name": "idle",
+              "fps": 5,
+              "numColumns": 2,
+              "numRows": 1,
+              "startFrame": 1,
+              "endFrame": 2,
+              "textureName": "JumpDingus3/Textures/enemy-Sheet.png"
+            }
+          ]
+        },
+        {
+          "type": "Box2DPhysicsComponent",
+          "gravityScale": 0,
+          "constrainAngle": true,
+          "damping": 1
+        },
+        {
+          "type": "Box2DCollisionComponent",
+          "resitution": 0.1,
+          "isTrigger": false
+        }
+      ]
+    },
+    {
+      "type": "Player",
+      "name": "Player",
+      "tag": "Player",
+      "persistent": true,
+      "speed": 80,
+      "maxSpeed": 4,
+      "jump": 14,
+      "transform": {
+        "position": [
+          400,
+          60
+        ],
+        "scale": 2,
+        "rotation": 0
+      },
+      "components": [
+        {
+          "type": "SpriteAnimRenderComponent",
+          "textureName": "JumpDingus3/Textures/jump dingus-Sheet.png",
+          "defaultSequenceName": "idle",
+          "source": [ 0, 0, 10, 35 ],
+          "origin": [ 0.5, 1 ],
+          "sequences": [
+            {
+              "name": "idle",
+              "fps": 1,
+              "numColumns": 9,
+              "numRows": 1,
+              "startFrame": 0,
+              "endFrame": 0,
+              "textureName": "JumpDingus3/Textures/jump dingus-Sheet.png"
+            },
+            {
+              "name": "run",
+              "fps": 8,
+              "numColumns": 9,
+              "numRows": 1,
+              "startFrame": 1,
+              "endFrame": 2,
+              "textureName": "JumpDingus3/Textures/jump dingus-Sheet.png"
+            },
+            {
+              "name": "dash1",
+              "fps": 8,
+              "numColumns": 9,
+              "numRows": 1,
+              "startFrame": 4,
+              "endFrame": 4,
+              "textureName": "JumpDingus3/Textures/jump dingus-Sheet.png"
+            },
+            {
+              "name": "dash2",
+              "fps": 8,
+              "numColumns": 9,
+              "numRows": 1,
+              "startFrame": 5,
+              "endFrame": 5,
+              "textureName": "JumpDingus3/Textures/jump dingus-Sheet.png"
+            },
+            {
+              "name": "run1",
+              "fps": 8,
+              "numColumns": 9,
+              "numRows": 1,
+              "startFrame": 6,
+              "endFrame": 7,
+              "textureName": "JumpDingus3/Textures/jump dingus-Sheet.png"
+            },
+            {
+              "name": "jump",
+              "fps": 8,
+              "numColumns": 9,
+              "numRows": 1,
+              "startFrame": 3,
+              "endFrame": 3,
+              "textureName": "JumpDingus3/Textures/jump dingus-Sheet.png"
+            },
+            {
+              "name": "crouch?",
+              "fps": 1,
+              "numColumns": 9,
+              "numRows": 1,
+              "startFrame": 8,
+              "endFrame": 8,
+              "textureName": "JumpDingus3/Textures/jump dingus-Sheet.png"
+            }
+          ]
+        },
+        {
+          "type": "Box2DPhysicsComponent",
+          "constrainAngle": true,
+          "gravityScale": 2
+        },
+        {
+          "type": "Box2DCollisionComponent",
+          "resitution": 0
+        }
+      ]
+    }
+  ]
+}

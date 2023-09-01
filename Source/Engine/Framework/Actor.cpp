@@ -14,6 +14,13 @@ namespace minimum
 		transform = other.transform;
 		m_scene = other.m_scene;
 		m_game = other.m_game;
+
+		for (auto& component : other.components)
+		{
+			auto cloneComponent = std::unique_ptr<Component>(dynamic_cast<Component*>(component->Clone().release()));
+			AddComponent(std::move(cloneComponent));
+		}
+
 	}
 
 	bool Actor::Initialize()
@@ -58,13 +65,12 @@ namespace minimum
 				r_component->Draw(renderer);
 			}
 		}
-
 	}
 
 	void Actor::AddComponent(std::unique_ptr<Component> component)
 	{
 		component->m_owner = this;
-		components.push_back(std::move(component)); //this gives me error ;/
+		components.push_back(std::move(component));
 	}
 
 	void Actor::Read(const json_t& value)
@@ -86,9 +92,9 @@ namespace minimum
 				READ_DATA(componentValue, type);
 
 				auto component = CREATE_CLASSBASE(Component, type);
-				component->Read(componentValue);
+				component->Read(componentValue); // breaks here, happens on 3rd loop
 
-				AddComponent(std::move(component)); //have to move it cause its a unique pointer
+				AddComponent(std::move(component));
 			}
 		}
 	}

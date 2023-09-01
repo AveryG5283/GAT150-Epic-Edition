@@ -10,6 +10,7 @@
 #include "Audio/AudioSystem.h"
 #include "Input/InputSystem.h"
 #include "Framework/Emitter.h"
+#include "Framework/EventManager.h"
 
 bool SpaceBlast3000::Initialize()
 {
@@ -34,6 +35,12 @@ bool SpaceBlast3000::Initialize()
 	m_scene = std::make_unique<minimum::Scene>();
 	m_scene->Load("scene.json");
 	m_scene->Initialize();
+
+	// add events
+	//minimum::EventManager::Instance().Subscribe("AddPoints", this, std::bind(&SpaceGame::AddPoints, this, std::placeholders::_1));
+	//minimum::EventManager::Instance().Subscribe("OnPlayerDead", this, std::bind(&SpaceGame::OnPlayerDead, this, std::placeholders::_1));
+	EVENT_SUBSCRIBE("OnAddPoints", SpaceBlast3000::OnAddPoints);
+	EVENT_SUBSCRIBE("OnPlayerDead", SpaceBlast3000::OnPlayerDead);
 
 	return true;
 }
@@ -64,51 +71,10 @@ void SpaceBlast3000::Update(float dt)
 	case SpaceBlast3000::eState::StartLevel:
 		m_scene->RemoveAll(true);
 	{
-		//create player
-		auto player = std::make_unique<minimum::Player>(20.0f, minimum::Pi, minimum::Transform{{ 400, 300}, 0, 4.5f});
-		player->tag = "Player";
-		player->m_game = this;
-
-		//create components
-
-		auto renderComponent = CREATE_CLASS(SpriteComponent);
-		renderComponent->m_texture = GET_RESOURCE(minimum::Texture, "rocket.png", minimum::g_renderer);
-		//renderComponent->m_texture = minimum::g_resources.Get<minimum::Texture>("rocket.png");
-		player->AddComponent(std::move(renderComponent));
-
-		auto physicsComponent = CREATE_CLASS(EnginePhysicsComponent);
-		physicsComponent->m_damping = 0.9f;
-		player->AddComponent(std::move(physicsComponent));
-
-		auto collisionComponent = CREATE_CLASS(CircleCollisionComponent);		
-		collisionComponent->m_radius = 30.0f;
-		player->AddComponent(std::move(collisionComponent));
-
-		player->Initialize();
-		m_scene->Add(std::move(player));
-
-
-
-
-		auto enemy2 = std::make_unique<minimum::Enemy2>(20.0f, minimum::Pi, minimum::Transform{{ 400, 300}, 0, 4.5f});
-		enemy2->tag = "Enemy";
-		enemy2->m_game = this;
-
-		//create components
-		auto rrenderComponent = CREATE_CLASS(SpriteComponent);
-		rrenderComponent->m_texture = GET_RESOURCE(minimum::Texture, "rocket.png", minimum::g_renderer);
-		enemy2->AddComponent(std::move(renderComponent));
-
-		auto pphysicsComponent = CREATE_CLASS(EnginePhysicsComponent);
-		pphysicsComponent->m_damping = 0.9f;
-		enemy2->AddComponent(std::move(physicsComponent));
-
-		auto ccollisionComponent = CREATE_CLASS(CircleCollisionComponent);
-		ccollisionComponent->m_radius = 30.0f;
-		enemy2->AddComponent(std::move(ccollisionComponent));
-
-		enemy2->Initialize();
-		m_scene->Add(std::move(enemy2));
+			auto player = INSTANTIATE(minimum::Player, "Player");
+			player->transform = minimum::Transform{ { 400, 300 }, 0, 1 };
+			player->Initialize();
+			m_scene->Add(std::move(player));
 	}
 
 		m_state = eState::Game;
@@ -119,36 +85,8 @@ void SpaceBlast3000::Update(float dt)
 		m_spawnTimer += dt;
 		if (m_spawnTimer >= m_spawnTime)
 		{
-			m_spawnTimer = 0;
-			auto enemy= std::make_unique<minimum::Enemy>(20.0f, minimum::Pi, minimum::Transform{{ 400, 300}, 0, 4.5f});
-			enemy->tag = "Enemy";
-			enemy->m_game = this;
-
-			//create components
-			auto renderComponent = CREATE_CLASS(SpriteComponent);
-			renderComponent->m_texture = GET_RESOURCE(minimum::Texture, "rocket.png", minimum::g_renderer);
-			enemy->AddComponent(std::move(renderComponent));
-
-			auto physicsComponent = CREATE_CLASS(EnginePhysicsComponent);
-			physicsComponent->m_damping = 0.9f;
-			enemy->AddComponent(std::move(physicsComponent));
-
-			auto ccollisionComponent = CREATE_CLASS(CircleCollisionComponent);
-			ccollisionComponent->m_radius = 30.0f;
-			enemy->AddComponent(std::move(ccollisionComponent));
-
-			enemy->Initialize();
-			m_scene->Add(std::move(enemy));
-
-			/*if (!enemy3Summoned && m_score >= 1000)
-			{
-				std::unique_ptr<Enemy2> enemy23 = std::make_unique<Enemy2>(225.0f, minimum::Pi, minimum::Transform{ { 50, 50 }, 0, 7.5f });
-				enemy23->tag = "Enemy2";
-				enemy23->m_game = this;
-				m_scene->Add(std::move(enemy23));
-				enemy3Summoned = true;
-			}*/
-
+			
+			//
 
 		}
 		break;
@@ -184,4 +122,14 @@ void SpaceBlast3000::Draw(minimum::Renderer& renderer)
 	}
 
 	m_scoreText->Draw(renderer, 40, 40);
+}
+
+void SpaceBlast3000::OnAddPoints(const minimum::Event& event)
+{
+	m_score += std::get<int>(event.data);
+}
+
+void SpaceBlast3000::OnPlayerDead(const minimum::Event& event)
+{
+	m_state = eState::GameOver;
 }

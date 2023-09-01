@@ -4,20 +4,19 @@
 #include "Framework/Scene.h"
 #include "Input/InputSystem.h"
 #include "Renderer/Renderer.h"
-#include "Framework/Emitter.h"
-#include "Framework/Emitter.h"
-#include "Framework/PhysicsComponent.h"
-#include "Framework/CollisionComponent.h"
-#include "Framework/RenderComponent.h"
+#include "Framework/Framework.h"
 
 #include "Game/SpaceBlast3000.h"
 
 
 namespace minimum {
+	CLASS_DEFINITION(Enemy)
+
 	bool Enemy::Initialize()
 	{
 		Actor::Initialize();
 
+		m_physicsComponent = GetComponent<PhysicsComponent>();
 		auto collisionComponent = GetComponent<minimum::CollisionComponent>();
 
 		if (collisionComponent)
@@ -46,16 +45,19 @@ namespace minimum {
 
 			float turnAngle = minimum::vec2::SignedAngle(forward, direction.Normalized());
 
-			transform.rotation += turnAngle * dt;
+			//transform.rotation += turnAngle * dt;
+			m_physicsComponent->ApplyTorque(turnAngle);
 		}
 
-		transform.position += forward * m_speed * minimum::g_time.GetDeltaTime();
+		m_physicsComponent->ApplyForce(forward * speed);
+
+		transform.position += forward * speed * minimum::g_time.GetDeltaTime();
 		transform.position.x = minimum::Wrap(transform.position.x, (float)minimum::g_renderer.GetWidth()); //if i dont cast these to a float he stutters and dies
 		transform.position.y = minimum::Wrap(transform.position.y, (float)minimum::g_renderer.GetHeight());
 
 	}
 
-	void Enemy::OnCollision(Actor* other)
+	void Enemy::OnCollisionEnter(Actor* other)
 	{
 		//dynamic_cast<Player*>(other) returns a player or null
 
@@ -86,5 +88,14 @@ namespace minimum {
 			//minimum::g_audioSystem.PlayOneShot("dead");
 			dynamic_cast<SpaceBlast3000*>(m_game)->SetState(SpaceBlast3000::eState::Game);
 		}
+	}
+
+	void Enemy::Read(const json_t& value)
+	{
+		Actor::Read(value);
+		READ_DATA(value, speed);
+		READ_DATA(value, turnRate);
+		READ_DATA(value, fireRate);
+		READ_DATA(value, fireTimer);
 	}
 }

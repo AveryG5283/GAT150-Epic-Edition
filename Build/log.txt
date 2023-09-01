@@ -1,6 +1,14 @@
+INFO: Class Registered: Enemy
+INFO: Class Registered: Player
+INFO: Class Registered: TilemapComponent
+INFO: Class Registered: TextRenderComponent
 INFO: Class Registered: SpriteComponent
+INFO: Class Registered: SpriteAnimRenderComponent
 INFO: Class Registered: ModelRenderComponent
 INFO: Class Registered: EnginePhysicsComponent
 INFO: Class Registered: CircleCollisionComponent
+INFO: Class Registered: Box2DPhysicsComponent
+INFO: Class Registered: Box2DCollisionComponent
 INFO: Class Registered: Actor
-INFO: Initialize Engine...
+INFO: Class Registered: tile01
+INFO: Class Registered: tile02

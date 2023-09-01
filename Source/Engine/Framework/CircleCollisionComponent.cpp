@@ -9,7 +9,7 @@ namespace minimum
 
     void CircleCollisionComponent::Update(float dt)
     {
-
+        //
     }
 
     bool CircleCollisionComponent::CheckCollision(CollisionComponent* collision)

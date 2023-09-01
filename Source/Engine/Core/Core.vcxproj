@@ -158,6 +158,7 @@
     <ClInclude Include="Matrix22.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="random.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector2.h" />

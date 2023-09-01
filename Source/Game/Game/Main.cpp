@@ -15,6 +15,8 @@
 #include <vector>
 #include <array>
 #include <map>
+#include <functional>
+
 
 using namespace std;
 
@@ -53,11 +55,53 @@ void print_arg(int count, ...)
 	va_end(args);
 }
 
+void print(int i)
+{
+	cout << i << endl;
+}
+
+int add(int butt, int hole)
+{
+	int butthole = butt + hole;
+	return butthole;
+}
+
+class A
+{
+public:
+	int add(int butt, int hole)
+	{
+		return butt + hole;
+	}
+};
+
+union Data
+{
+	int i;
+	bool b;
+	char c[6];
+};
+
 
 int main(int argc, char* argv[])
 {	
 
+	Data data;
+	data.b = true;
 
+	cout << data.i << endl;
+
+	void (*func_ptr)(int) = &print;
+
+	func_ptr(5);
+
+	std::function<int(int, int)> op;
+	op = add;
+	cout << op(35, 34) << endl;
+
+	A a;
+	op = std::bind(&A::add, &a, std::placeholders::_1, std::placeholders::_2);
+	cout << op(42, 27) << endl;
 
 	INFO_LOG("Initialize Engine...");
 
@@ -73,6 +117,23 @@ int main(int argc, char* argv[])
 	minimum::g_inputSystem.Initialize();
 	minimum::g_audioSystem.Initialize();
 	minimum::PhysicsSystem::Instance().Initialize();
+
+	rapidjson::Document document;
+	minimum::Json::Load("json.txt", document);
+
+	std::string str;
+	minimum::Json::Read(document, "string", str);
+	std::cout << str << std::endl;
+
+	bool b;
+	minimum::Json::Read(document, "boolean", b);
+	std::cout << b << std::endl;
+
+	float f;
+	minimum::Json::Read(document, "float", f);
+	std::cout << f << std::endl;
+
+
 	
 
 	unique_ptr<SpaceBlast3000> game = make_unique<SpaceBlast3000>();
@@ -104,6 +165,8 @@ int main(int argc, char* argv[])
 		{
 			quit = true;
 		}
+
+		minimum::PhysicsSystem::Instance().Update(minimum::g_time.GetDeltaTime());
 
 		//update draw
 		minimum::Vector2 vel(1.0f, 0.3f);

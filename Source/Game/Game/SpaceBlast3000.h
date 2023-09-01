@@ -1,8 +1,9 @@
 #pragma once
 #include "Framework/Game.h"
 #include "Renderer/Text.h"
+#include "Framework/EventManager.h"
 
-class SpaceBlast3000 : public minimum::Game
+class SpaceBlast3000 : public minimum::Game, minimum::IEventListener
 {
 	class Renderer;
 
@@ -29,6 +30,10 @@ public:
 	virtual void Draw(minimum::Renderer& renderer) override;
 
 	void SetState(eState state) { m_state = state; }
+
+	virtual void OnAddPoints(const minimum::Event& event);
+
+	void OnPlayerDead(const minimum::Event& event);
 
 private:
 	eState m_state = eState::Title;
